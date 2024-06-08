@@ -1,7 +1,7 @@
 {
-    "name": "@avilabs/starter-ts",
+    "name": "@avilabs/airtel-business-api",
     "version": "0.1.0",
-    "description": "starter-ts",
+    "description": "airtel-business-api",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
     "scripts": {
@@ -10,7 +10,11 @@
         "dev": "npm run build && npm run start | npx pino-pretty"
     },
     "keywords": [
-        "starter-ts"
+        "airtel-business-api",
+        "airtel",
+        "business",
+        "api",
+        "thanks for business"
     ],
     "author": "contact@avilabs.net",
     "license": "UNLICENSED",
@@ -19,12 +23,12 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+ssh://git@github.com/avilabss/starter-ts.git"
+        "url": "git+ssh://git@github.com/avilabss/airtel-business-api.git"
     },
     "bugs": {
-        "url": "https://github.com/avilabss/starter-ts/issues"
+        "url": "https://github.com/avilabss/airtel-business-api/issues"
     },
-    "homepage": "https://github.com/avilabss/starter-ts#readme",
+    "homepage": "https://github.com/avilabss/airtel-business-api#readme",
     "devDependencies": {
         "@types/jest": "^29.5.11",
         "@types/node": "^20.10.4",
