@@ -1,0 +1,40 @@
+{
+    "name": "@avilabs/starter-ts",
+    "version": "0.1.0",
+    "description": "starter-ts",
+    "main": "./lib/index.js",
+    "types": "./lib/index.d.ts",
+    "scripts": {
+        "build": "npx tsc",
+        "test": "npx jest",
+        "dev": "npm run build && npm run start | npx pino-pretty"
+    },
+    "keywords": [
+        "starter-ts"
+    ],
+    "author": "contact@avilabs.net",
+    "license": "UNLICENSED",
+    "files": [
+        "lib/**/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/avilabss/starter-ts.git"
+    },
+    "bugs": {
+        "url": "https://github.com/avilabss/starter-ts/issues"
+    },
+    "homepage": "https://github.com/avilabss/starter-ts#readme",
+    "devDependencies": {
+        "@types/jest": "^29.5.11",
+        "@types/node": "^20.10.4",
+        "pino-pretty": "^10.2.3",
+        "ts-jest": "^29.1.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.3"
+    },
+    "dependencies": {
+        "dotenv": "^16.4.4",
+        "pino": "^8.16.2"
+    }
+}
