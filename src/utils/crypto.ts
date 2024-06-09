@@ -1,5 +1,5 @@
 import * as crypto from 'crypto'
-import * as cryptoJS from 'crypto-js'
+import cryptoJS from 'crypto-js'
 
 function nanoID(length: number) {
     return crypto
