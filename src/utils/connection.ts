@@ -96,7 +96,10 @@ export class Connection {
                         if (!response.body) return response
 
                         try {
-                            const decryptedBody = decryptDatafromString(response.body.toString(), key.toString())
+                            const decryptedBody = decryptDatafromString(
+                                response.body.toString().replace('"', ''),
+                                key.toString()
+                            )
                             response.body = decryptedBody
                         } catch (error) {
                             logger.error('Error decrypting response body', error)

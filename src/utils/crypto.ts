@@ -24,7 +24,7 @@ export function encryptDataToString(data: string, key: string) {
 }
 
 export function decryptDatafromString(data: string, key: string) {
-    return cryptoJS.DES.decrypt(data.replace('"', ''), cryptoJS.enc.Utf8.parse(key), {
+    return cryptoJS.DES.decrypt(data, cryptoJS.enc.Utf8.parse(key), {
         mode: cryptoJS.mode.ECB,
         padding: cryptoJS.pad.Pkcs7,
     }).toString(cryptoJS.enc.Utf8)
