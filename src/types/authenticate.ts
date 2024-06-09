@@ -24,7 +24,7 @@ export type InvalidCredentialsResponse = {
 }
 
 export type ValidateEmailResponse = {
-    userStatus: UserStatus // Needs to be 'ACTIVE'
+    userStatus: UserStatus | null // Needs to be 'ACTIVE'
     isExistingCustomer: boolean // Needs to be true
     isRegisteredInAEH: boolean // Needs to be true
     isInternalUser: boolean

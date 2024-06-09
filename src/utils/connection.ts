@@ -1,19 +1,27 @@
-import got, { OptionsOfTextResponseBody, type Got } from 'got'
+import { got, OptionsOfTextResponseBody, type Got } from 'got'
 import { HttpsProxyAgent, HttpProxyAgent } from 'hpagent'
+
+import { encryptDataToString, decryptDatafromString, generateNewEncryptionKey } from './crypto.js'
+import { logger } from './logger.js'
+import { ConnectionOptions } from '../types/connection.js'
 
 export class Connection {
     client: Got
     timeout: number
     proxyUrl?: string
+    prefixUrl: string
 
-    constructor(proxyUrl?: string, timeout?: number) {
-        this.proxyUrl = proxyUrl
-        this.timeout = timeout || 1000 * 60 * 2
+    constructor(connectionOptions?: ConnectionOptions) {
+        this.proxyUrl = connectionOptions?.proxyUrl
+        this.timeout = connectionOptions?.timeout || 1000 * 60 * 2
+        this.prefixUrl = connectionOptions?.prefixUrl || 'https://digi-api.airtel.in/as/app/b2b-api/'
+
         this.client = this.initialize()
     }
 
     private initialize() {
         const client = got.extend({
+            prefixUrl: this.prefixUrl,
             decompress: true,
             followRedirect: true,
             timeout: {
@@ -56,8 +64,40 @@ export class Connection {
                         })
                     },
                 ],
-                beforeRequest: [],
-                afterResponse: [],
+                beforeRequest: [
+                    (request) => {
+                        if (request.method === 'GET') return
+                        if (!request.body) return
+                        if (request.headers['host'] !== 'digi-api.airtel.in') return
+
+                        try {
+                            const key = generateNewEncryptionKey()
+                            const encryptedBody = encryptDataToString(request.body.toString(), key)
+
+                            request.headers['adsHeader'] = key
+                            request.body = encryptedBody
+                        } catch (error) {
+                            logger.error('Error encrypting request body', error)
+                        }
+                    },
+                ],
+                afterResponse: [
+                    (response) => {
+                        const key = response.headers['googlecookie']
+
+                        if (!key) return response
+                        if (!response.body) return response
+
+                        try {
+                            const decryptedBody = decryptDatafromString(response.body.toString(), key.toString())
+                            response.body = JSON.parse(decryptedBody)
+                        } catch (error) {
+                            logger.error('Error decrypting response body', error)
+                        }
+
+                        return response
+                    },
+                ],
                 beforeRetry: [],
             },
         })

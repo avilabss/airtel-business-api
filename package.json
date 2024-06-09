@@ -7,7 +7,7 @@
     "type": "module",
     "scripts": {
         "build": "npx tsc",
-        "test": "npx jest",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "dev": "npm run build && npm run start | npx pino-pretty",
         "start": "node lib/index.js"
     },
