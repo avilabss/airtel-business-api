@@ -1,8 +1,14 @@
-import { Connection, logger } from './lib/index.js'
+import dotenv from 'dotenv'
+dotenv.config()
 
-const connection = new Connection({
-    prefixUrl: 'https://ifconfig.me',
-})
+import { Client } from './lib/index.js'
 
-const response = await connection.get('ip')
-logger.info(response.body)
+const LOGIN_EMAIL = process.env.LOGIN_EMAIL
+const LOGIN_PASSWORD = process.env.LOGIN_PASSWORD
+
+const client = new Client()
+const result = await client.authenticate.usingPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
+console.log(JSON.stringify(result))
+
+const session = client.exportSession()
+console.log(JSON.stringify(session))

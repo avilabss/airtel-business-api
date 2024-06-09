@@ -7,6 +7,7 @@ import {
     ValidateEmailResponse,
 } from '../types/authenticate.js'
 import { APIGroup } from '../utils/apiGroup.js'
+import { logger } from '../utils/logger.js'
 
 export class Authenticate extends APIGroup {
     private isAuthenticateResponse(response: any): response is AuthenticateResponse {
@@ -22,10 +23,10 @@ export class Authenticate extends APIGroup {
     }
 
     private async validateEmail(email: string): Promise<ValidateEmailResponse> {
-        const url = '/airtel-b2b-profile/rest/user/validate'
-        const headers = this.state.getDefaultHeaders()
+        const url = 'airtel-b2b-profile/rest/user/validate'
+        const headers = this._state.getDefaultHeaders()
         const searchParams = { emailId: email }
-        const response = await this.connection.get(url, { headers, searchParams })
+        const response = await this._connection.get(url, { headers, searchParams })
         const responseJSON = JSON.parse(response.body)
 
         if (this.isValidateEmailResponse(responseJSON)) {
@@ -36,21 +37,22 @@ export class Authenticate extends APIGroup {
     }
 
     async usingPassword(email: string, password: string): Promise<AuthenticateResponse | InvalidCredentialsResponse> {
-        await this.validateEmail(email)
+        const validateEmailResponse = await this.validateEmail(email)
+        logger.debug(`validateEmailResponse: ${JSON.stringify(validateEmailResponse)}`)
 
-        const url = '/airtel-b2b-profile/rest/user/v2/authenticate'
-        const headers = this.state.getDefaultHeaders()
+        const url = 'airtel-b2b-profile/rest/user/v2/authenticate'
+        const headers = this._state.getDefaultHeaders()
         const payload: AuthenticatePayload = {
             emailId: email,
             password: password,
             grantType: GrantType.PASSWORD,
         }
         const body = JSON.stringify(payload)
-        const response = await this.connection.post(url, { headers, body })
+        const response = await this._connection.post(url, { headers, body })
         const responseJSON = JSON.parse(response.body)
 
         if (this.isAuthenticateResponse(responseJSON)) {
-            this.state.localStorage.update((state) => {
+            this._state.localStorage.update((state) => {
                 state.accessToken = responseJSON.accessToken
                 state.refreshToken = responseJSON.refreshToken
             })

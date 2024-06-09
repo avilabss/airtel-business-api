@@ -75,10 +75,12 @@ export class Connection {
 
                         try {
                             const encryptedBody = encryptDataToString(request.body.toString(), key)
-                            request.body = encryptedBody
+                            request.body = `"${encryptedBody}"`
                         } catch (error) {
                             logger.error('Error encrypting request body', error)
                         }
+
+                        logger.debug(`${request.method} ${request.url?.toString()}\n${JSON.stringify(request.headers)}`)
                     },
                 ],
                 afterResponse: [
@@ -95,6 +97,7 @@ export class Connection {
                             logger.error('Error decrypting response body', error)
                         }
 
+                        logger.debug(`${response.statusCode}: ${JSON.stringify(response.headers)}`)
                         return response
                     },
                 ],

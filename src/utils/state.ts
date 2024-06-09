@@ -13,7 +13,6 @@ export class State {
             refreshToken: null,
             accessToken: null,
             pageURL: 'https://www.airtel.in/business/thanksforbusiness/login/',
-            userAgent: `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36`,
         })
     }
 
@@ -27,9 +26,19 @@ export class State {
         headers['Connection'] = 'keep-alive'
         headers['Content-Type'] = 'application/json'
         headers['googleCookie'] = 'airtel.com'
+        headers['Host'] = 'digi-api.airtel.in'
         headers['Origin'] = 'https://www.airtel.in'
         headers['Referer'] = 'https://www.airtel.in/'
         headers['requesterId'] = 'WEB'
+        headers['sec-ch-ua'] = `"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`
+        headers['sec-ch-ua-mobile'] = '?0'
+        headers['sec-ch-ua-platform'] = `"macOS"`
+        headers['Sec-Fetch-Dest'] = 'empty'
+        headers['Sec-Fetch-Mode'] = 'cors'
+        headers['Sec-Fetch-Site'] = 'cross-site'
+
+        // prettier-ignore
+        headers['User-Agent'] = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36`
 
         return headers
     }
@@ -39,7 +48,6 @@ export class State {
         const headers: Record<string, string> = {}
 
         headers['pageURL'] = localStorage.pageURL
-        headers['User-Agent'] = localStorage.userAgent
 
         if (localStorage.accessToken) {
             headers['Authorization'] = `Bearer ${localStorage.accessToken}`
