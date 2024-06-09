@@ -66,15 +66,15 @@ export class Connection {
                 ],
                 beforeRequest: [
                     (request) => {
-                        if (request.method === 'GET') return
-                        if (!request.body) return
                         if (request.headers['host'] !== 'digi-api.airtel.in') return
 
-                        try {
-                            const key = generateNewEncryptionKey()
-                            const encryptedBody = encryptDataToString(request.body.toString(), key)
+                        const key = generateNewEncryptionKey()
+                        request.headers['adsHeader'] = key
 
-                            request.headers['adsHeader'] = key
+                        if (!request.body) return
+
+                        try {
+                            const encryptedBody = encryptDataToString(request.body.toString(), key)
                             request.body = encryptedBody
                         } catch (error) {
                             logger.error('Error encrypting request body', error)
