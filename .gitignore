@@ -131,3 +131,9 @@ dist
 
 # typescript
 lib
+
+# tmp
+error.json
+test.txt
+nano.txt
+test.js

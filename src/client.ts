@@ -3,8 +3,8 @@ import { Connection } from './utils/connection.js'
 import { State } from './utils/state.js'
 
 export class Client {
-    private connection: Connection
-    private state: State
+    connection: Connection
+    state: State
 
     authenticate: Authenticate
 

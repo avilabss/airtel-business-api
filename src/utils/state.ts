@@ -35,7 +35,7 @@ export class State {
         headers['sec-ch-ua-platform'] = `"macOS"`
         headers['sec-fetch-dest'] = 'empty'
         headers['sec-fetch-mode'] = 'cors'
-        headers['sec-fetch-site'] = 'cross-site'
+        headers['sec-fetch-site'] = 'same-site'
 
         // prettier-ignore
         headers['user-agent'] = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36`

@@ -1,15 +1,17 @@
-import { got, OptionsOfTextResponseBody, type Got } from 'got'
+import { got, Headers, OptionsOfTextResponseBody, Response, type Got } from 'got'
 import { HttpsProxyAgent, HttpProxyAgent } from 'hpagent'
 
 import { encryptDataToString, decryptDatafromString, generateNewEncryptionKey } from './crypto.js'
 import { logger } from './logger.js'
 import { ConnectionOptions } from '../types/connection.js'
+import { headerKeysOrderFormat } from './constants.js'
 
 export class Connection {
     client: Got
     timeout: number
     proxyUrl?: string
     prefixUrl: string
+    lastResponse?: Response<unknown>
 
     constructor(connectionOptions?: ConnectionOptions) {
         this.proxyUrl = connectionOptions?.proxyUrl
@@ -17,6 +19,35 @@ export class Connection {
         this.prefixUrl = connectionOptions?.prefixUrl || 'https://digi-api.airtel.in/as/app/b2b-api/'
 
         this.client = this.initialize()
+    }
+
+    private sortFormatHeaders(headers: Headers) {
+        const finalHeaders: Headers = {}
+        const lowerCaseHeaders: Headers = {}
+        const headerKeysOrderFormatLower = headerKeysOrderFormat.map((key) => key.toLowerCase())
+
+        // Convert headers
+        for (let key in headers) {
+            lowerCaseHeaders[key.toLowerCase()] = headers[key]
+        }
+
+        // Add known headers in order
+        for (let key of headerKeysOrderFormat) {
+            let keyLower = key.toLowerCase()
+            if (keyLower in lowerCaseHeaders) {
+                finalHeaders[key] = lowerCaseHeaders[keyLower]
+            }
+        }
+
+        // Add unknown headers
+        for (let key in headers) {
+            let keyLower = key.toLowerCase()
+            if (!headerKeysOrderFormatLower.includes(keyLower)) {
+                finalHeaders[key] = headers[key]
+            }
+        }
+
+        return finalHeaders
     }
 
     private initialize() {
@@ -80,16 +111,19 @@ export class Connection {
 
                         try {
                             const encryptedBody = encryptDataToString(request.body.toString(), key)
-                            request.body = `"${encryptedBody}"`
+                            // request.body = `"${encryptedBody}"`
+                            request.body = encryptedBody
                         } catch (error) {
                             logger.error('Error encrypting request body', error)
                         }
 
+                        request.headers = this.sortFormatHeaders(request.headers)
                         logger.debug(`${request.method} ${request.url?.toString()}\n${JSON.stringify(request.headers)}`)
                     },
                 ],
                 afterResponse: [
                     (response) => {
+                        this.lastResponse = response
                         const key = response.headers['googlecookie']
 
                         if (!key) return response
