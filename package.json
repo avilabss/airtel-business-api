@@ -7,9 +7,8 @@
     "type": "module",
     "scripts": {
         "build": "npx tsc",
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-        "dev": "npm run build && npm run start | npx pino-pretty",
-        "start": "node lib/index.js"
+        "test": "npx vitest",
+        "dev": "npm run build && node quick.run.js | npx pino-pretty"
     },
     "keywords": [
         "airtel-business-api",
@@ -33,12 +32,11 @@
     "homepage": "https://github.com/avilabss/airtel-business-api#readme",
     "devDependencies": {
         "@types/crypto-js": "^4.2.2",
-        "@types/jest": "^29.5.11",
         "@types/node": "^20.10.4",
         "pino-pretty": "^10.2.3",
-        "ts-jest": "^29.1.1",
         "ts-node": "^10.9.2",
-        "typescript": "^5.3.3"
+        "typescript": "^5.3.3",
+        "vitest": "^1.6.0"
     },
     "dependencies": {
         "crypto-js": "^4.2.0",
