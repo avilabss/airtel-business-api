@@ -24,6 +24,7 @@ export class Connection {
             prefixUrl: this.prefixUrl,
             decompress: true,
             followRedirect: true,
+            // http2: true,
             timeout: {
                 request: this.timeout,
             },
@@ -69,9 +70,13 @@ export class Connection {
                         if (request.headers['host'] !== 'digi-api.airtel.in') return
 
                         const key = generateNewEncryptionKey()
-                        request.headers['adsHeader'] = key
+                        request.headers['adsheader'] = key
 
-                        if (!request.body) return
+                        if (!request.body) {
+                            // prettier-ignore
+                            logger.debug(`${request.method} ${request.url?.toString()}\n${JSON.stringify(request.headers)}`)
+                            return
+                        }
 
                         try {
                             const encryptedBody = encryptDataToString(request.body.toString(), key)
@@ -97,7 +102,7 @@ export class Connection {
                             logger.error('Error decrypting response body', error)
                         }
 
-                        logger.debug(`${response.statusCode}: ${JSON.stringify(response.headers)}`)
+                        logger.debug(`${response.statusCode} ${JSON.stringify(response.headers)}`)
                         return response
                     },
                 ],

@@ -19,26 +19,26 @@ export class State {
     private getStaticHeaders() {
         const headers: Record<string, string> = {}
 
-        headers['Accept'] = 'application/json, text/plain, */*'
-        headers['Accept-Encoding'] = 'gzip, deflate, br, zstd'
-        headers['Accept-Language'] = 'en-GB,en-US;q=0.9,en;q=0.8'
+        headers['accept'] = 'application/json, text/plain, */*'
+        headers['accept-encoding'] = 'gzip, deflate, br, zstd'
+        headers['accept-language'] = 'en-GB,en-US;q=0.9,en;q=0.8'
         headers['app-id'] = 'SELFCARE'
-        headers['Connection'] = 'keep-alive'
-        headers['Content-Type'] = 'application/json'
-        headers['googleCookie'] = 'airtel.com'
-        headers['Host'] = 'digi-api.airtel.in'
-        headers['Origin'] = 'https://www.airtel.in'
-        headers['Referer'] = 'https://www.airtel.in/'
-        headers['requesterId'] = 'WEB'
+        headers['connection'] = 'keep-alive'
+        headers['content-type'] = 'application/json'
+        headers['googlecookie'] = 'airtel.com'
+        headers['host'] = 'digi-api.airtel.in'
+        headers['origin'] = 'https://www.airtel.in'
+        headers['referer'] = 'https://www.airtel.in/'
+        headers['requesterid'] = 'WEB'
         headers['sec-ch-ua'] = `"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`
         headers['sec-ch-ua-mobile'] = '?0'
         headers['sec-ch-ua-platform'] = `"macOS"`
-        headers['Sec-Fetch-Dest'] = 'empty'
-        headers['Sec-Fetch-Mode'] = 'cors'
-        headers['Sec-Fetch-Site'] = 'cross-site'
+        headers['sec-fetch-dest'] = 'empty'
+        headers['sec-fetch-mode'] = 'cors'
+        headers['sec-fetch-site'] = 'cross-site'
 
         // prettier-ignore
-        headers['User-Agent'] = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36`
+        headers['user-agent'] = `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36`
 
         return headers
     }
@@ -47,10 +47,10 @@ export class State {
         const localStorage = this.localStorage.get()
         const headers: Record<string, string> = {}
 
-        headers['pageURL'] = localStorage.pageURL
+        headers['pageurl'] = localStorage.pageURL
 
         if (localStorage.accessToken) {
-            headers['Authorization'] = `Bearer ${localStorage.accessToken}`
+            headers['authorization'] = `Bearer ${localStorage.accessToken}`
         }
 
         return headers
