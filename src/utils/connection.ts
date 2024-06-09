@@ -1,7 +1,7 @@
 import { got, Headers, OptionsOfTextResponseBody, Response, type Got } from 'got'
 import { HttpsProxyAgent, HttpProxyAgent } from 'hpagent'
 
-import { encryptDataToString, decryptDatafromString, generateNewEncryptionKey } from './crypto.js'
+import { decryptDatafromString } from './crypto.js'
 import { logger } from './logger.js'
 import { ConnectionOptions } from '../types/connection.js'
 import { headerKeysOrderFormat } from './constants.js'
@@ -98,25 +98,6 @@ export class Connection {
                 ],
                 beforeRequest: [
                     (request) => {
-                        if (request.headers['host'] !== 'digi-api.airtel.in') return
-
-                        const key = generateNewEncryptionKey()
-                        request.headers['adsheader'] = key
-
-                        if (!request.body) {
-                            // prettier-ignore
-                            logger.debug(`${request.method} ${request.url?.toString()}\n${JSON.stringify(request.headers)}`)
-                            return
-                        }
-
-                        try {
-                            const encryptedBody = encryptDataToString(request.body.toString(), key)
-                            // request.body = `"${encryptedBody}"`
-                            request.body = encryptedBody
-                        } catch (error) {
-                            logger.error('Error encrypting request body', error)
-                        }
-
                         request.headers = this.sortFormatHeaders(request.headers)
                         logger.debug(`${request.method} ${request.url?.toString()}\n${JSON.stringify(request.headers)}`)
                     },

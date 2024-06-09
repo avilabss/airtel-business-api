@@ -7,6 +7,7 @@ import {
     ValidateEmailResponse,
 } from '../types/authenticate.js'
 import { APIGroup } from '../utils/apiGroup.js'
+import { encryptDataToString, generateNewEncryptionKey } from '../utils/crypto.js'
 import { logger } from '../utils/logger.js'
 
 export class Authenticate extends APIGroup {
@@ -24,7 +25,9 @@ export class Authenticate extends APIGroup {
 
     private async validateEmail(email: string): Promise<ValidateEmailResponse> {
         const url = 'airtel-b2b-profile/rest/user/validate'
+        const key = generateNewEncryptionKey()
         const headers = this._state.getDefaultHeaders()
+        headers['adsheader'] = key
         const searchParams = { emailId: email }
         const response = await this._connection.get(url, { headers, searchParams })
         const responseJSON = JSON.parse(response.body)
@@ -41,13 +44,15 @@ export class Authenticate extends APIGroup {
         logger.debug(`validateEmailResponse: ${JSON.stringify(validateEmailResponse)}`)
 
         const url = 'airtel-b2b-profile/rest/user/v2/authenticate'
+        const key = generateNewEncryptionKey()
         const headers = this._state.getDefaultHeaders()
+        headers['adsheader'] = key
         const payload: AuthenticatePayload = {
             emailId: email,
             password: password,
             grantType: GrantType.PASSWORD,
         }
-        const body = JSON.stringify(payload)
+        const body = encryptDataToString(JSON.stringify(payload), key)
         const response = await this._connection.post(url, { headers, body })
         const responseJSON = JSON.parse(response.body)
 
