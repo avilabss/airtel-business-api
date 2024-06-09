@@ -1,12 +1,12 @@
 {
     "name": "@avilabs/airtel-business-api",
     "version": "0.1.0",
-    "description": "airtel-business-api",
+    "description": "An unofficial API for Airtel Business.",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
     "scripts": {
         "build": "npx tsc",
-        "test": "node --openssl-legacy-provider ./node_modules/.bin/jest",
+        "test": "npx jest",
         "dev": "npm run build && npm run start | npx pino-pretty"
     },
     "keywords": [
