@@ -90,7 +90,7 @@ export class Connection {
 
                         try {
                             const decryptedBody = decryptDatafromString(response.body.toString(), key.toString())
-                            response.body = JSON.parse(decryptedBody)
+                            response.body = decryptedBody
                         } catch (error) {
                             logger.error('Error decrypting response body', error)
                         }

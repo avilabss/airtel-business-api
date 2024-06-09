@@ -1,4 +1,4 @@
-export class CodeError extends Error {
+export class ClientError extends Error {
     message: string
 
     constructor(message: string) {
