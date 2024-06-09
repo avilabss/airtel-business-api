@@ -1,4 +1,4 @@
-import { Code, GrantType, UserStatus } from '../enums/authenticate'
+import { Code, GrantType, UserStatus } from '../enums/authenticate.js'
 
 export type AuthenticatePayload = {
     emailId: string

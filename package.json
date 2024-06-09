@@ -4,10 +4,12 @@
     "description": "An unofficial API for Airtel Business.",
     "main": "./lib/index.js",
     "types": "./lib/index.d.ts",
+    "type": "module",
     "scripts": {
         "build": "npx tsc",
         "test": "npx jest",
-        "dev": "npm run build && npm run start | npx pino-pretty"
+        "dev": "npm run build && npm run start | npx pino-pretty",
+        "start": "node lib/index.js"
     },
     "keywords": [
         "airtel-business-api",
@@ -42,7 +44,7 @@
         "crypto-js": "^4.2.0",
         "dotenv": "^16.4.4",
         "got": "^14.4.1",
-        "pino": "^8.16.2",
-        "proxy-agent": "^6.4.0"
+        "hpagent": "^1.2.0",
+        "pino": "^8.16.2"
     }
 }
