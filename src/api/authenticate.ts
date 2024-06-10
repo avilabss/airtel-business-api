@@ -37,8 +37,7 @@ export class Authenticate extends APIGroup {
     }
 
     async usingPassword(email: string, password: string): Promise<AuthenticateResponse | InvalidCredentialsResponse> {
-        const validateEmailResponse = await this.validateEmail(email)
-        logger.debug(`validateEmailResponse: ${JSON.stringify(validateEmailResponse)}`)
+        await this.validateEmail(email)
 
         const url = 'airtel-b2b-profile/rest/user/v2/authenticate'
         const headers = this._state.getDefaultHeaders()
