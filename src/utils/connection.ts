@@ -1,7 +1,7 @@
 import { got, Headers, OptionsOfTextResponseBody, Response, type Got } from 'got'
 import { HttpsProxyAgent, HttpProxyAgent } from 'hpagent'
 
-import { decryptDatafromString } from './crypto.js'
+import { decryptDatafromString, encryptDataToString, generateNewEncryptionKey } from './crypto.js'
 import { logger } from './logger.js'
 import { ConnectionOptions } from '../types/connection.js'
 import { headerKeysOrderFormat } from './constants.js'
@@ -98,6 +98,16 @@ export class Connection {
                 ],
                 beforeRequest: [
                     (request) => {
+                        if (request.headers['host'] === 'digi-api.airtel.in') {
+                            const key = generateNewEncryptionKey()
+                            request.headers['adsheader'] = key
+
+                            if (request.body) {
+                                request.body = `"${encryptDataToString(request.body.toString(), key)}"`
+                                request.headers['content-length'] = request.body.length.toString()
+                            }
+                        }
+
                         request.headers = this.sortFormatHeaders(request.headers)
                         logger.debug(`${request.method} ${request.url?.toString()}\n${JSON.stringify(request.headers)}`)
                     },
