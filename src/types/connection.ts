@@ -6,9 +6,15 @@ export type ConnectionOptions = {
     prefixUrl?: string
 }
 
-export type Request = {
+export type RequestList = {
     lob: Lob
     connectionType: ConnectionType | null
+}
+
+export type RequestDetails = {
+    lob: Lob
+    connectionType: ConnectionType | null
+    circuitId: string
 }
 
 export type Pagination = {
@@ -17,12 +23,21 @@ export type Pagination = {
 }
 
 export type GetConnectionListPayload = {
-    request: Request
+    request: RequestList
     paginationRequired: boolean
     pagination: Pagination
     sortingRequired: boolean
     filterRequired: boolean
     searchQuery: []
+}
+
+export type GetConnectionDetailsPayload = {
+    request: RequestDetails
+    paginationRequired: boolean
+    sortingRequired: boolean
+    filterRequired: boolean
+    searchQuery: []
+    pagination: Pagination
 }
 
 export type UserAddress = {
