@@ -1,13 +1,14 @@
 import { GrantType, UserStatus } from '../enums/authenticate.js'
-import { InvalidEmail, UnknownResponse } from '../exceptions/clientError.js'
+import { InvalidEmail, SessionExpired, UnknownResponse } from '../exceptions/clientError.js'
 import {
     AuthenticatePayload,
     AuthenticateResponse,
+    ValidSessionResponse,
     InvalidCredentialsResponse,
     ValidateEmailResponse,
+    InvalidSessionResponse,
 } from '../types/authenticate.js'
 import { APIGroup } from '../utils/apiGroup.js'
-import { logger } from '../utils/logger.js'
 
 export class Authenticate extends APIGroup {
     private isAuthenticateResponse(response: any): response is AuthenticateResponse {
@@ -22,8 +23,16 @@ export class Authenticate extends APIGroup {
         return response.userStatus === UserStatus.ACTIVE && response.isExistingCustomer && response.isRegisteredInAEH
     }
 
-    private async validateEmail(email: string): Promise<ValidateEmailResponse> {
-        const url = 'airtel-b2b-profile/rest/user/validate'
+    private isValidSessionResponse(response: any): response is ValidSessionResponse {
+        return response.success === true
+    }
+
+    private isInvalidSessionResponse(response: any): response is InvalidSessionResponse {
+        return response.errorCode !== undefined
+    }
+
+    async validateEmail(email: string): Promise<ValidateEmailResponse> {
+        const url = 'as/app/b2b-api/airtel-b2b-profile/rest/user/validate'
         const headers = this._state.getDefaultHeaders()
         const searchParams = { emailId: email }
         const response = await this._connection.get(url, { headers, searchParams })
@@ -39,7 +48,7 @@ export class Authenticate extends APIGroup {
     async usingPassword(email: string, password: string): Promise<AuthenticateResponse | InvalidCredentialsResponse> {
         await this.validateEmail(email)
 
-        const url = 'airtel-b2b-profile/rest/user/v2/authenticate'
+        const url = 'as/app/b2b-api/airtel-b2b-profile/rest/user/v2/authenticate'
         const headers = this._state.getDefaultHeaders()
         const payload: AuthenticatePayload = {
             emailId: email,
@@ -58,6 +67,31 @@ export class Authenticate extends APIGroup {
 
             return responseJSON
         } else if (this.isInvalidCredentialsResponse(responseJSON)) {
+            return responseJSON
+        }
+
+        throw new UnknownResponse(`Unknown response: ${JSON.stringify(responseJSON)}`)
+    }
+
+    async checkSession(): Promise<ValidSessionResponse> {
+        const url = 's/app/b2b-api/airtel-b2b-profile/rest/user/v1/check/session'
+        const headers = this._state.getDefaultHeaders()
+
+        const response = await this._connection.get(url, { headers, throwHttpErrors: false })
+        const responseJSON = JSON.parse(response.body)
+
+        if (response.statusCode === 401) {
+            this._state.localStorage.update((state) => {
+                state.accessToken = null
+                state.refreshToken = null
+            })
+
+            if (this.isInvalidSessionResponse(responseJSON)) {
+                throw new SessionExpired(responseJSON.errorMessage)
+            }
+        }
+
+        if (this.isValidSessionResponse(responseJSON)) {
             return responseJSON
         }
 

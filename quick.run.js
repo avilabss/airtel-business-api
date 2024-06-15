@@ -21,6 +21,7 @@ try {
     }
 
     logger.info('Session loaded')
+    await client.authenticate.checkSession()
 } catch (error) {
     if (client.connection.lastResponse) {
         writeFileSync('./error.json', client.connection.lastResponse.body)

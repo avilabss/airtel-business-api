@@ -16,7 +16,7 @@ export class Connection {
     constructor(connectionOptions?: ConnectionOptions) {
         this.proxyUrl = connectionOptions?.proxyUrl
         this.timeout = connectionOptions?.timeout || 1000 * 60 * 2
-        this.prefixUrl = connectionOptions?.prefixUrl || 'https://digi-api.airtel.in/as/app/b2b-api/'
+        this.prefixUrl = connectionOptions?.prefixUrl || 'https://digi-api.airtel.in/'
 
         this.client = this.initialize()
     }

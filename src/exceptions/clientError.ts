@@ -17,3 +17,12 @@ export class InvalidEmail extends ClientError {
         this.message = message
     }
 }
+
+export class SessionExpired extends ClientError {
+    message: string
+
+    constructor(message: string) {
+        super(message)
+        this.message = message
+    }
+}

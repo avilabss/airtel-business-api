@@ -1,4 +1,4 @@
-import { Code, GrantType, UserStatus } from '../enums/authenticate.js'
+import { Code, ErrorCode, GrantType, ResourceLayer, UserStatus } from '../enums/authenticate.js'
 
 export type AuthenticatePayload = {
     emailId: string
@@ -24,10 +24,27 @@ export type InvalidCredentialsResponse = {
 }
 
 export type ValidateEmailResponse = {
-    userStatus: UserStatus | null // Needs to be 'ACTIVE'
-    isExistingCustomer: boolean // Needs to be true
-    isRegisteredInAEH: boolean // Needs to be true
+    userStatus: UserStatus | null
+    isExistingCustomer: boolean
+    isRegisteredInAEH: boolean
     isInternalUser: boolean
     isExistingCustomerWithDataLob: boolean
     isReadOnlySuperAdmin: boolean
+}
+
+export type ValidSessionResponse = {
+    success: boolean
+    loginId: string
+}
+
+export type InvalidSessionResponse = {
+    errorCode: ErrorCode
+    errorType: null | any
+    apiPath: null | any
+    errorDetails: null | any
+    resourceLayer: ResourceLayer
+    errorMeta: null | any
+    httpStatus: number
+    displayMessage: string
+    errorMessage: string
 }
