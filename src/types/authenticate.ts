@@ -16,6 +16,16 @@ export type AuthenticateResponse = {
     redirectUri: string | null
 }
 
+export type RefreshTokenResponse = {
+    accessToken: string
+    tokenType: 'Bearer'
+    expiresIn: number
+    refreshToken: null | any
+    userUuid: string
+    redirectUri: null | any
+    errorCode: null | any
+}
+
 export type InvalidCredentialsResponse = {
     code: Code
     title: string

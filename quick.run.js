@@ -3,6 +3,7 @@ dotenv.config()
 
 import { Client, logger } from './lib/index.js'
 import { writeFileSync, existsSync, readFileSync } from 'fs'
+import { ConnectionType, Lob } from './lib/enums/connection.js'
 
 const LOGIN_EMAIL = process.env.LOGIN_EMAIL
 const LOGIN_PASSWORD = process.env.LOGIN_PASSWORD
@@ -21,7 +22,20 @@ try {
     }
 
     logger.info('Session loaded')
+
+    await client.authenticate.refreshToken()
+    logger.info('Token refreshed')
+
     await client.authenticate.checkSession()
+    logger.info('Session checked')
+
+    const connections = await client.connection.getList({
+        lob: Lob.MOBILITY,
+        connectionType: ConnectionType.MOBILE,
+        limit: 1,
+        offset: 0,
+    })
+    logger.info(`Found connections: ${JSON.stringify(connections)}`)
 } catch (error) {
     if (client.connection.lastResponse) {
         writeFileSync('./error.json', client.connection.lastResponse.body)

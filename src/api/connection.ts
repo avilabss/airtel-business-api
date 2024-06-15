@@ -5,7 +5,7 @@ import { APIGroup } from '../utils/apiGroup.js'
 export class Connection extends APIGroup {
     async getList(options: {
         lob: Lob
-        connectionType: ConnectionType
+        connectionType: ConnectionType | null
         limit: number
         offset: number
     }): Promise<ConnectionListResponse> {

@@ -7,6 +7,7 @@ import {
     InvalidCredentialsResponse,
     ValidateEmailResponse,
     InvalidSessionResponse,
+    RefreshTokenResponse,
 } from '../types/authenticate.js'
 import { APIGroup } from '../utils/apiGroup.js'
 
@@ -29,6 +30,10 @@ export class Authenticate extends APIGroup {
 
     private isInvalidSessionResponse(response: any): response is InvalidSessionResponse {
         return response.errorCode !== undefined
+    }
+
+    private isRefreshTokenResponse(response: any): response is RefreshTokenResponse {
+        return response.accessToken !== undefined
     }
 
     async validateEmail(email: string): Promise<ValidateEmailResponse> {
@@ -92,6 +97,28 @@ export class Authenticate extends APIGroup {
         }
 
         if (this.isValidSessionResponse(responseJSON)) {
+            return responseJSON
+        }
+
+        throw new UnknownResponse(`Unknown response: ${JSON.stringify(responseJSON)}`)
+    }
+
+    async refreshToken(): Promise<RefreshTokenResponse> {
+        const url = 'as/app/b2b-api/airtel-b2b-profile/rest/user/v1/refresh/token'
+        const localStorage = this._state.localStorage.get()
+        const headers = {
+            ...this._state.getDefaultHeaders(),
+            refreshToken: localStorage.refreshToken!,
+        }
+
+        const response = await this._connection.get(url, { headers })
+        const responseJSON = JSON.parse(response.body)
+
+        if (this.isRefreshTokenResponse(responseJSON)) {
+            this._state.localStorage.update((state) => {
+                state.accessToken = responseJSON.accessToken
+            })
+
             return responseJSON
         }
 

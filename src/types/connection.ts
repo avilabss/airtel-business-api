@@ -8,7 +8,7 @@ export type ConnectionOptions = {
 
 export type Request = {
     lob: Lob
-    connectionType: ConnectionType
+    connectionType: ConnectionType | null
 }
 
 export type Pagination = {

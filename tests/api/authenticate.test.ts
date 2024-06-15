@@ -6,6 +6,7 @@ import {
     AuthenticateResponse,
     InvalidCredentialsResponse,
     InvalidSessionResponse,
+    RefreshTokenResponse,
     ValidateEmailResponse,
     ValidSessionResponse,
 } from '../../src/types/authenticate'
@@ -59,6 +60,16 @@ const validSessionResponse: ValidSessionResponse = {
     loginId: 'XYZ@GMAIL.COM',
 }
 
+const refreshTokenResponse: RefreshTokenResponse = {
+    accessToken: 'xxx',
+    tokenType: 'Bearer',
+    expiresIn: 1718480717,
+    refreshToken: null,
+    userUuid: 'XXX@gmail.com',
+    redirectUri: null,
+    errorCode: null,
+}
+
 describe('Authenticate API test', () => {
     it('should validate email', async () => {
         const client = new Client()
@@ -110,5 +121,12 @@ describe('Authenticate API test', () => {
             new UnknownResponse(`Unknown response: ${JSON.stringify(unknownResponse)}`)
         )
         await expect(client.authenticate.checkSession()).rejects.toThrow(UnknownResponse)
+    })
+
+    it('should refresh token', async () => {
+        const client = new Client()
+        vi.spyOn(client.authenticate, 'refreshToken').mockResolvedValue(refreshTokenResponse)
+        const response = await client.authenticate.refreshToken()
+        expect(response).toEqual(refreshTokenResponse)
     })
 })
