@@ -134,6 +134,7 @@ lib
 
 # tmp
 error.json
+test.json
 test.txt
 nano.txt
 test.js

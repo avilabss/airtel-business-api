@@ -1,22 +1,25 @@
 import { Authenticate } from './api/authenticate.js'
-import { Connection } from './utils/connection.js'
+import { Connection } from './api/connection.js'
+import { Connection as _Connection } from './utils/connection.js'
 import { State } from './utils/state.js'
 
 export class Client {
-    connection: Connection
-    state: State
+    _connection: _Connection
+    _state: State
 
     authenticate: Authenticate
+    connection: Connection
 
-    constructor(connection?: Connection) {
-        this.connection = connection || new Connection()
-        this.state = new State()
+    constructor(connection?: _Connection) {
+        this._connection = connection || new _Connection()
+        this._state = new State()
 
-        this.authenticate = new Authenticate(this.connection, this.state)
+        this.authenticate = new Authenticate(this._connection, this._state)
+        this.connection = new Connection(this._connection, this._state)
     }
 
     exportSession() {
-        const localStorage = this.state.localStorage.get()
+        const localStorage = this._state.localStorage.get()
         return {
             accessToken: localStorage.accessToken,
             refreshToken: localStorage.refreshToken,
@@ -24,7 +27,7 @@ export class Client {
     }
 
     importSession(session: { accessToken: string; refreshToken: string }) {
-        this.state.localStorage.update((state) => {
+        this._state.localStorage.update((state) => {
             state.accessToken = session.accessToken
             state.refreshToken = session.refreshToken
         })
